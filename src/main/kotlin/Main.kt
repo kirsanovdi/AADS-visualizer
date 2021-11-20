@@ -37,7 +37,7 @@ class GraphicsDisplay {
     }
 
     fun run(lineLists: MutableList<DrawableList>) {
-        println("Hello LWJGL " + Version.getVersion() + "!")
+        println("gui started with LWJGL " + Version.getVersion() + " (OpenGl)")
 
         //listsToDraw.addAll(lineLists)
         listsToDraw = lineLists

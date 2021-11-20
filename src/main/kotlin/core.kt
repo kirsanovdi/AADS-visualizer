@@ -6,11 +6,13 @@ import kotlin.random.Random
 class CoreModel(private val renderList: MutableList<DrawableList>, private var semaphore: Semaphore = Semaphore(0, false), private var keepGoing: Boolean = true) {//semaphore
     fun run(){
         println(".run() started")
+        println(" core waiting")
         semaphore.acquire()
         while(keepGoing){
             val map = mutableMapOf<String, List<Figure>>()
             calculate(map)
             transferToRenderList(map, 10)
+            println(" core waiting")
             semaphore.acquire()
         }
         println(".run() ended")
@@ -22,13 +24,15 @@ class CoreModel(private val renderList: MutableList<DrawableList>, private var s
     }
 
     fun clear(){
+        println(".clear() called")
         synchronized(renderList) {
             renderList.clear()
         }
-        println(".clear() called, renderList cleared")
+        println(".clear() finished, renderList cleared")
     }
 
     private fun transferToRenderList(algorithmDataList: MutableMap<String, List<Figure>>, delay: Long){
+        println(".transferToRenderList() started")
         for((name, list) in algorithmDataList){//спросить про это
             val mutableList = when(list.firstOrNull()){
                 is Segment -> DrawableChangingLines(color = DrawableColor(1.0,0.0,0.0))
@@ -43,6 +47,7 @@ class CoreModel(private val renderList: MutableList<DrawableList>, private var s
                 Thread.sleep(delay)
             }
         }
+        println(".transferToRenderList() ended")
     }
 
     private fun calculate(algorithmDataList: MutableMap<String, List<Figure>>){
@@ -54,6 +59,6 @@ class CoreModel(private val renderList: MutableList<DrawableList>, private var s
             )
         }
         getDataDiameter(algorithmDataList, inputList, 10)
-        println(".calculate ended")
+        println(".calculate() ended")
     }
 }
