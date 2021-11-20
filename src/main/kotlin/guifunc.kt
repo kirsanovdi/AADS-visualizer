@@ -27,6 +27,10 @@ abstract class DrawableList(val drawableColor: DrawableColor){
     abstract fun draw()
 }
 
+abstract class DrawableChangeList(drawableColor: DrawableColor): DrawableList(drawableColor){
+    abstract fun addElement(figure: Figure)
+}
+
 class DrawableLines(private val lines: List<Segment>, private val color: DrawableColor, private val width: Float = 1.0f): DrawableList(color){
     override fun draw() {
         glColor3d(drawableColor.red, drawableColor.green, drawableColor.blue)
@@ -42,6 +46,32 @@ class DrawablePoints(private val points: List<Point>, private val color: Drawabl
         glPointSize(size)
         glBegin(GL_POINTS);
         for (point in points) drawPoint(point)
+        glEnd()
+    }
+}
+
+class DrawableChangingLines(private val lines: MutableList<Segment> = mutableListOf(), private val color: DrawableColor, private val width: Float = 1.0f): DrawableChangeList(color){
+    override fun addElement(figure: Figure){
+        lines.add(figure as Segment)
+    }
+    override fun draw() {
+        glColor3d(drawableColor.red, drawableColor.green, drawableColor.blue)
+        glLineWidth(width)
+        glBegin(GL_LINES)
+        for(line in lines) drawLine(line)
+        glEnd()
+    }
+}
+
+class DrawableChangingPoints(private val points: MutableList<Point> = mutableListOf(), private val color: DrawableColor, private val width: Float = 1.0f): DrawableChangeList(color){
+    override fun addElement(figure: Figure){
+        points.add(figure as Point)
+    }
+    override fun draw() {
+        glColor3d(drawableColor.red, drawableColor.green, drawableColor.blue)
+        glLineWidth(width)
+        glBegin(GL_LINES)
+        for(point in points) drawPoint(point)
         glEnd()
     }
 }

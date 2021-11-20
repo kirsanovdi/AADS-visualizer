@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 import kotlin.concurrent.thread
-import kotlin.math.sqrt
-import kotlin.random.Random
 
 const val wHeight = 1022
 const val wWidth = 1920
@@ -131,15 +129,15 @@ class GraphicsDisplay {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val mutableList = mutableListOf<DrawableList>()
-            val coreModel = CoreModel(mutableList)
+            val renderList = mutableListOf<DrawableList>()
+            val coreModel = CoreModel(renderList)
             val graphicsDisplay = GraphicsDisplay()
             val controller = Controller(coreModel, graphicsDisplay)
             val coreThread = thread {
                 coreModel.run()
             }
             val guiThread = thread{
-                graphicsDisplay.run(mutableList)
+                graphicsDisplay.run(renderList)
             }
             controller.run()//пока в этом потоке
             coreThread.join()
