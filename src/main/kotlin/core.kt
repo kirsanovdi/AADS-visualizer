@@ -3,22 +3,27 @@ import kotlin.math.E
 import kotlin.random.Random
 
 
-class CoreModel(private val renderList: MutableList<DrawableList>, private var semaphore: Semaphore = Semaphore(0, false), private var keepGoing: Boolean = true) {//semaphore
+class CoreModel(private val renderList: MutableList<DrawableList>,
+                private var semaphore: Semaphore = Semaphore(0, false),
+                private var keepGoing: Boolean = true,
+                private var delay: Long = 10L)
+{//semaphore
     fun run(){
         println(".run() started")
-        println(" core waiting")
+        println(" core is waiting")
         semaphore.acquire()
         while(keepGoing){
             val map = mutableMapOf<String, List<Figure>>()
             calculate(map)
-            transferToRenderList(map, 10)
-            println(" core waiting")
+            transferToRenderList(map, delay)
+            println(" core is waiting")
             semaphore.acquire()
         }
         println(".run() ended")
     }
-    fun resume(isKeepGoing: Boolean){
+    fun resume(isKeepGoing: Boolean, newDelay: Long = 10L){
         println(".resume($isKeepGoing) called")
+        delay = newDelay
         keepGoing = isKeepGoing
         semaphore.release()
     }
@@ -39,7 +44,9 @@ class CoreModel(private val renderList: MutableList<DrawableList>, private var s
                 is Point -> DrawableChangingPoints(color =  DrawableColor(1.0,0.0,0.0))
                 else -> throw Exception()
             }
-            renderList.add(mutableList)
+            synchronized(renderList) {
+                renderList.add(mutableList)
+            }
             for (elem in list){
                 synchronized(renderList) {
                     mutableList.addElement(elem)

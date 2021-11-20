@@ -13,9 +13,9 @@ const val wHeight = 1022
 const val wWidth = 1920
 const val wPrecision = 140
 //const val delay = 2000L
-class GraphicsDisplay {
+class GraphicsDisplay(private var listsToDraw: MutableList<DrawableList>) {
     private var window: Long = 0
-    private var listsToDraw = mutableListOf<DrawableList>()
+    //private var listsToDraw = mutableListOf<DrawableList>()
     private var lastTime = 0.0
     private var currentTime = 0.0
     private var frames = 0
@@ -36,11 +36,11 @@ class GraphicsDisplay {
         }
     }
 
-    fun run(lineLists: MutableList<DrawableList>) {
+    fun run() {//lineLists: MutableList<DrawableList> deleted
         println("gui started with LWJGL " + Version.getVersion() + " (OpenGl)")
 
         //listsToDraw.addAll(lineLists)
-        listsToDraw = lineLists
+        //listsToDraw = lineLists
 
         init()
         loop()
@@ -131,13 +131,13 @@ class GraphicsDisplay {
         fun main(args: Array<String>) {
             val renderList = mutableListOf<DrawableList>()
             val coreModel = CoreModel(renderList)
-            val graphicsDisplay = GraphicsDisplay()
+            val graphicsDisplay = GraphicsDisplay(renderList)
             val controller = Controller(coreModel, graphicsDisplay)
             val coreThread = thread {
                 coreModel.run()
             }
             val guiThread = thread{
-                graphicsDisplay.run(renderList)
+                graphicsDisplay.run()
             }
             controller.run()//пока в этом потоке
             coreThread.join()
