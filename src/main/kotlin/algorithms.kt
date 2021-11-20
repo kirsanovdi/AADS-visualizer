@@ -1,7 +1,7 @@
 import java.util.*
 import kotlin.math.*
 
-fun getDataHull(algorithmDataMap: MutableMap<String, List<Figure>>, listInput: List<Point>, precision: Double, delay: Long): List<Point> {
+fun getDataHull(algorithmDataMap: MutableMap<String, List<Figure>>, listInput: List<Point>, precision: Double): List<Point> {
     //инициализация observer data
     val listHullCheck = mutableListOf<Segment>()
 
@@ -70,7 +70,7 @@ fun getDataDiameter(algorithmDataMap: MutableMap<String, List<Figure>>, points: 
     if (points.size == 2) return Segment(points[0], points[1])
     var hull: List<Point> = listOf()
     try {
-        hull = getDataHull(algorithmDataMap, points, delta, delay)
+        hull = getDataHull(algorithmDataMap, points, delta)
     } catch (e: Exception) {
         throw Exception(points.toString())
     }
@@ -131,10 +131,9 @@ fun getDataDiameter(algorithmDataMap: MutableMap<String, List<Figure>>, points: 
     }
     //ввод observer data
     algorithmDataMap["diameterCheck"] = listDiameterCheck
-    algorithmDataMap["hull"] = hull
     algorithmDataMap["hullSegment"] = hull.indices.map { i ->
         Segment(hull.getFromPos(i), hull.getFromPos(i + 1))
     }
-
+    algorithmDataMap["hull"] = hull
     return result
 }

@@ -50,7 +50,8 @@ class DrawablePoints(private val points: List<Point>, private val color: Drawabl
     }
 }
 
-class DrawableChangingLines(private val lines: MutableList<Segment> = mutableListOf(), private val color: DrawableColor, private val width: Float = 1.0f): DrawableChangeList(color){
+class DrawableChangingLines(private val color: DrawableColor, private val width: Float = 1.0f): DrawableChangeList(color){
+    private val lines: MutableList<Segment> = mutableListOf()
     override fun addElement(figure: Figure){
         lines.add(figure as Segment)
     }
@@ -63,15 +64,16 @@ class DrawableChangingLines(private val lines: MutableList<Segment> = mutableLis
     }
 }
 
-class DrawableChangingPoints(private val points: MutableList<Point> = mutableListOf(), private val color: DrawableColor, private val width: Float = 1.0f): DrawableChangeList(color){
+class DrawableChangingPoints(private val color: DrawableColor, private val size: Float = 1.0f): DrawableChangeList(color){
+    private val points: MutableList<Point> = mutableListOf()
     override fun addElement(figure: Figure){
         points.add(figure as Point)
     }
     override fun draw() {
         glColor3d(drawableColor.red, drawableColor.green, drawableColor.blue)
-        glLineWidth(width)
-        glBegin(GL_LINES)
-        for(point in points) drawPoint(point)
+        glPointSize(size)
+        glBegin(GL_POINTS);
+        for (point in points) drawPoint(point)
         glEnd()
     }
 }
