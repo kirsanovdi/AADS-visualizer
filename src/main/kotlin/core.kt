@@ -68,7 +68,7 @@ class CoreModel(private val renderList: MutableList<DrawableList>, )
             )
         }
         algorithmDataList["input"] = inputList
-        getDataDiameter(algorithmDataList, inputList, 10)
+        getDataDiameter(algorithmDataList, inputList)
         println(".calculate() ended")
     }
 }

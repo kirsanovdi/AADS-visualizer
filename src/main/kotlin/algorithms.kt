@@ -62,7 +62,7 @@ fun getDataHull(algorithmDataMap: MutableMap<String, List<Figure>>, listInput: L
     return hullAns.toList()
 }
 
-fun getDataDiameter(algorithmDataMap: MutableMap<String, List<Figure>>, points: List<Point>, delay: Long): Segment {
+fun getDataDiameter(algorithmDataMap: MutableMap<String, List<Figure>>, points: List<Point>): Segment {
     //инициализация observer data
     val listDiameterCheck = mutableListOf<Segment>()
 
