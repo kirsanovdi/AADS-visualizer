@@ -1,6 +1,6 @@
 import org.lwjgl.opengl.GL11.*
 import javax.sound.sampled.Line
-import kotlin.math.max
+import kotlin.math.*
 
 private fun Double.toHFloat() = (this/ wHeight * wPrecision).toFloat()
 private fun Double.toWFloat() = (this/ wWidth * wPrecision).toFloat()
@@ -20,6 +20,17 @@ private fun drawPoint(point: Point){
     glVertex2f(x, y)
 }
 
+private fun drawCircle(circle: Circle){
+    val x = circle.center.x
+    val y = circle.center.y
+    val radius = circle.radius
+    glBegin(GL_LINE_LOOP)
+    for(angle in 0..360){
+        val theta = PI * angle/180.0
+        glVertex2f((x + radius * cos(theta)).toWFloat(), (y + radius * sin(theta)).toHFloat())
+    }
+    glEnd()
+}
 
 class DrawableColor(val red: Double, val green: Double, val blue: Double)
 
@@ -75,6 +86,17 @@ class DrawableChangingPoints(private val color: DrawableColor, private val size:
         glBegin(GL_POINTS);
         for (point in points) drawPoint(point)
         glEnd()
+    }
+}
+
+class DrawableChangingCircles(private val color: DrawableColor): DrawableChangeList(color){
+    private val circles: MutableList<Circle> = mutableListOf()
+    override fun addElement(figure: Figure) {
+        circles.add(figure as Circle)
+    }
+    override fun draw() {
+        glColor3d(drawableColor.red, drawableColor.green, drawableColor.blue)
+        for (circle in circles) drawCircle(circle)
     }
 }
 

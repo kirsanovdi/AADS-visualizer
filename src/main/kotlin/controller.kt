@@ -10,7 +10,7 @@ class Controller(private val coreModel: CoreModel, private val graphicsDisplay: 
                         coreModel.resume(false)
                         graphicsDisplay.close()
                     }
-                    "next" -> coreModel.resume(true, command[1].toLong())
+                    "run" -> coreModel.resume(true, command[1], command[2].toLong(), command[3].toInt())
                     "clear" -> coreModel.clear()
                     else -> println("non-existent command, print \"help\" for displaying a list of commands")
                 }
