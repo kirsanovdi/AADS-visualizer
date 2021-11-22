@@ -28,6 +28,7 @@ class AlgorithmModel(private val algorithmDataMap: MutableMap<String, MutableLis
     fun getDataMinContainingCircle(points: List<Point>): Circle {//попробуем с динамическим преобразованием
         //инициализация observer data
         algorithmDataMap["circlesCheck"] = mutableListOf()
+        algorithmDataMap["circle"] = mutableListOf()
 
         when (points.size) {
             0 -> throw IllegalArgumentException()
@@ -44,6 +45,7 @@ class AlgorithmModel(private val algorithmDataMap: MutableMap<String, MutableLis
                 circle = minCircleWithPoint(points.subList(0, i), point)
             }
         }
+        algorithmDataMap["circle"]!!.add(circle)
         return circle
     }
 
@@ -111,6 +113,7 @@ class AlgorithmModel(private val algorithmDataMap: MutableMap<String, MutableLis
         algorithmDataMap["hullCheck"] = mutableListOf()
         algorithmDataMap["hullSegment"] = mutableListOf()
         algorithmDataMap["diameterCheck"] = mutableListOf()
+        algorithmDataMap["diameter"] = mutableListOf()
 
         if (points.size < 2) throw IllegalArgumentException()
         if (points.size == 2) return Segment(points[0], points[1])
@@ -179,7 +182,7 @@ class AlgorithmModel(private val algorithmDataMap: MutableMap<String, MutableLis
         algorithmDataMap["hullSegment"]!!.addAll(hull.indices.map { i ->
             Segment(hull.getFromPos(i), hull.getFromPos(i + 1))
         })
-
+        algorithmDataMap["diameter"]!!.add(result)
         return result
     }
 }

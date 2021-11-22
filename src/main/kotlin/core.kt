@@ -9,15 +9,30 @@ class CoreModel(private val renderList: MutableList<DrawableList>, )
     private var delay: Long = 10L
     private var funName: String = ""
     private var inputCount: Int = 1000
-    //private var sizeOfRandom: Int = 500
-    //private var from
+    private var permission: Set<String> = setOf("All")
+    private var colorMap: MutableMap<String,DrawableColor> = mutableMapOf(
+        "hullCheck" to cyanDColor,
+        "hullSegment" to magentaDColor,
+        "diameterCheck" to yellowDColor,
+        "circlesCheck" to greenDColor,
+        "diameter" to redDColor,
+        "circle" to redDColor,
+        "inputPoints" to blueDColor
+    )
+
+    fun setColor(name: String, color: DrawableColor){
+        synchronized(colorMap) {
+            if (name in colorMap) {
+                colorMap[name] = color
+            } else println("incorrect observer data name")
+        }
+    }
+
     fun run(){
         println(".run() started")
         println(" core is waiting")
         semaphore.acquire()
         while(keepGoing){
-            //val map = mutableMapOf<String, List<Figure>>()
-            //calculate(map)
             val map = mutableMapOf<String, MutableList<Figure>>()
             when(funName){
                 "diameter" -> calculate(map)
@@ -30,6 +45,11 @@ class CoreModel(private val renderList: MutableList<DrawableList>, )
         }
         println(".run() ended")
     }
+    fun stop(){
+        keepGoing = false
+        semaphore.release()
+    }
+
     fun resume(isKeepGoing: Boolean, name: String = "", newDelay: Long = 10L, newCount: Int = 1000){
         println(".resume($isKeepGoing) called")
         inputCount = newCount
@@ -50,10 +70,11 @@ class CoreModel(private val renderList: MutableList<DrawableList>, )
     private fun transferToRenderList(algorithmDataList: MutableMap<String, MutableList<Figure>>, delay: Long){
         println(".transferToRenderList() started")
         for((name, list) in algorithmDataList){//спросить про это
+            val color = synchronized(colorMap) {colorMap[name]?:blackDColor}
             val mutableList = when(list.firstOrNull()){
-                is Segment -> DrawableChangingLines(color = DrawableColor(1.0,0.0,0.0))
-                is Point -> DrawableChangingPoints(color =  DrawableColor(0.0,0.0,1.0))
-                is Circle -> DrawableChangingCircles(color =  DrawableColor(0.0,1.0,0.0))
+                is Segment -> DrawableChangingLines(color)
+                is Point -> DrawableChangingPoints(color)
+                is Circle -> DrawableChangingCircles(color)
                 else -> throw Exception()
             }
             synchronized(renderList) {
@@ -71,25 +92,15 @@ class CoreModel(private val renderList: MutableList<DrawableList>, )
 
     private fun calculate(algorithmDataList: MutableMap<String, MutableList<Figure>>){
         println(".calculate() called")
-        val inputList = List(inputCount) {
-            Point(
-                Random.nextDouble(Random.nextDouble(-7.0, -0.1), Random.nextDouble(0.1, 7.0)),
-                Random.nextDouble(Random.nextDouble(-7.0, -0.1), Random.nextDouble(0.1, 7.0))
-            )
-        }
-        algorithmDataList["input"] = inputList.toMutableList()
+        val inputList = randomPoints2List(inputCount, -7.0, -0.1, 0.1, 7.0)
+        algorithmDataList["inputPoints"] = inputList.toMutableList()
         AlgorithmModel(algorithmDataList).getDataDiameter(inputList)
         println(".calculate() ended")
     }
     private fun calculate2(algorithmDataList: MutableMap<String, MutableList<Figure>>){
         println(".calculate2() called")
-        val inputList = List(inputCount) {
-            Point(
-                Random.nextDouble(Random.nextDouble(-7.0, -0.1), Random.nextDouble(0.1, 7.0)),
-                Random.nextDouble(Random.nextDouble(-7.0, -0.1), Random.nextDouble(0.1, 7.0))
-            )
-        }
-        algorithmDataList["input"] = inputList.toMutableList()
+        val inputList = randomPoints2List(inputCount, -7.0, -0.1, 0.1, 7.0)
+        algorithmDataList["inputPoints"] = inputList.toMutableList()
         AlgorithmModel(algorithmDataList).getDataMinContainingCircle(inputList)
         println(".calculate2() ended")
     }

@@ -1,5 +1,6 @@
 import java.util.*
 import kotlin.math.*
+import kotlin.random.Random
 
 /**Дельта для вычислений с плавающей точкой */
 const val delta = 1e-10
@@ -165,3 +166,11 @@ fun smallestEnclosing(p1: Point, p2: Point): Circle =
         Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2),
         p1.distance(p2) / 2
     )
+
+/**Список случайных точек из (f1 - f2) - (s1 - s2)*/
+fun randomPoints2List(count: Int, f1: Double, f2: Double, s1:Double, s2: Double): List<Point> = List(count) {
+    Point(
+        Random.nextDouble(Random.nextDouble(f1, f2), Random.nextDouble(s1, s2)),
+        Random.nextDouble(Random.nextDouble(f1, f2), Random.nextDouble(s1, s2))
+    )
+}

@@ -34,6 +34,14 @@ private fun drawCircle(circle: Circle){
 
 class DrawableColor(val red: Double, val green: Double, val blue: Double)
 
+val redDColor = DrawableColor(1.0,0.0,0.0)
+val greenDColor = DrawableColor(0.0,1.0,0.0)
+val blueDColor = DrawableColor(0.0,0.0,1.0)
+val yellowDColor = DrawableColor(1.0,1.0,0.0)
+val magentaDColor = DrawableColor(1.0,0.0,1.0)
+val cyanDColor = DrawableColor(0.0,1.0,1.0)
+val blackDColor = DrawableColor(0.0,0.0,0.0)
+
 abstract class DrawableList(val drawableColor: DrawableColor){
     abstract fun draw()
 }
