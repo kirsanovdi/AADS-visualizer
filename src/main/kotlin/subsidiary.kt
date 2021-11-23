@@ -1,3 +1,5 @@
+import java.io.File
+import java.io.PrintStream
 import java.util.*
 import kotlin.math.*
 import kotlin.random.Random
@@ -173,4 +175,11 @@ fun randomPoints2List(count: Int, f1: Double, f2: Double, s1:Double, s2: Double)
         Random.nextDouble(Random.nextDouble(f1, f2), Random.nextDouble(s1, s2)),
         Random.nextDouble(Random.nextDouble(f1, f2), Random.nextDouble(s1, s2))
     )
+}
+
+fun main() {
+    val list = randomPoints2List(2500, -7.0, -0.1, 0.1, 7.0)
+    PrintStream(File("input.txt")).use {
+        for (point in list) it.println("${point.x} ${point.y}")
+    }
 }

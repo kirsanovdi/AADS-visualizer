@@ -1,9 +1,21 @@
 import org.lwjgl.opengl.GL11.*
 import javax.sound.sampled.Line
 import kotlin.math.*
+private var wPrecision = 140.0
+private var xOffset = 0.0
+private var yOffset = 0.0
+private fun Double.toHFloat() = ((this + yOffset)/ wHeight * wPrecision).toFloat()
+private fun Double.toWFloat() = ((this + xOffset)/ wWidth * wPrecision).toFloat()
 
-private fun Double.toHFloat() = (this/ wHeight * wPrecision).toFloat()
-private fun Double.toWFloat() = (this/ wWidth * wPrecision).toFloat()
+fun changeXOffset(deltaX: Double) {
+    xOffset -= deltaX
+}
+fun changeYOffset(deltaY: Double) {
+    yOffset -= deltaY
+}
+fun changePrecision(newPrecision: Double) {
+    wPrecision = newPrecision
+}
 
 private fun drawLine(segment: Segment) {
     val x1 = segment.begin.x.toWFloat()

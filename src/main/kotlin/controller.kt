@@ -3,19 +3,24 @@ class Controller(private val coreModel: CoreModel, private val graphicsDisplay: 
     private fun stop(){
         keepGoing = false
     }
+
     private fun setCoreResume(cmdLine: String){
         val commands = cmdLine.split(Regex("""\s+"""))
         val settings = Regex("""\S+\=\S+""").findAll(cmdLine)
         var delay = 10L
         var count = 1000
+        var inputName = ""
+        var permission = mutableSetOf<String>()
         for (setting in settings){
             val (param, value) = setting.value.split("=")
             when (param){
                 "delay" -> delay = value.toLong()
                 "count" -> count = value.toInt()
+                "input" -> inputName = value
+                "permission" -> permission.addAll(value.split(","))
             }
         }
-        coreModel.resume(isKeepGoing = true, name = commands[1], newDelay = delay, newCount = count)
+        coreModel.resume(isKeepGoing = true, name = commands[1], newDelay = delay, newCount = count, newInput = inputName, newPermission = permission)
     }
     fun run(){
         while (keepGoing){
@@ -31,6 +36,9 @@ class Controller(private val coreModel: CoreModel, private val graphicsDisplay: 
                     }
                     "run" -> setCoreResume(cmdLine)
                     "clear" -> coreModel.clear()
+                    "moveX" -> changeXOffset(command[1].toDouble())
+                    "moveY" -> changeYOffset(command[1].toDouble())
+                    "precision" -> changePrecision(command[1].toDouble())
                     //крание случаи, ошибки и т.д., думаю стоит перенести все проверки чисто на контроллер
                     "setColor" -> coreModel.setColor(command[1], DrawableColor(command[2].toDouble(), command[3].toDouble(), command[4].toDouble()))
                     else -> println("non-existent command, print \"help\" for displaying a list of commands")

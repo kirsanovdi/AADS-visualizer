@@ -11,7 +11,6 @@ import kotlin.concurrent.thread
 
 const val wHeight = 1022
 const val wWidth = 1920
-const val wPrecision = 140
 //const val delay = 2000L
 class GraphicsDisplay(private var listsToDraw: MutableList<DrawableList>) {
     private var window: Long = 0
